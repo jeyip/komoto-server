@@ -7,7 +7,7 @@ var sendSMS = require("./send_sms");
 
 var app = express();
 
-app.get("/", function(req, res) {
+app.get("/", (req, res) => {
   res.status(200).send("Hello world!!!");
 });
 
@@ -17,6 +17,6 @@ app.post("/note", (req, res) => {
   res.status(200).send("Sending note");
 });
 
-app.listen(process.env.PORT || 8080, function() {
+app.listen(process.env.PORT || 8080, () => {
   console.log("Server is running on PORT:", process.env.PORT || PORT);
 });
