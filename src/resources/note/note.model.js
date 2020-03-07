@@ -7,9 +7,15 @@ const noteSchema = mongoose.Schema({
     default: 'New Note',
     maxlength: 50
   },
+  text: String,
   createdAt: {
     type: Date,
     default: Date.now()
+  },
+  createdBy: {
+    type: mongoose.SchemaTypes.ObjectId,
+    ref: 'user',
+    required: true
   }
 })
 
