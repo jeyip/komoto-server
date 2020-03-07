@@ -1,22 +1,25 @@
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config();
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config()
 }
 
-var express = require("express");
-var sendSMS = require("./send_sms");
+var express = require('express')
+var sendSMS = require('./send_sms')
+var cors = require('cors')
 
-var app = express();
+var app = express()
 
-app.get("/", (req, res) => {
-  res.status(200).send("Hello world!!!");
-});
+app.use(cors)
 
-app.post("/note", (req, res) => {
-  const { text, phoneNumber } = req.body;
-  sendSMS(text, phoneNumber);
-  res.status(200).send("Sending note");
-});
+app.get('/', (req, res) => {
+  res.status(200).send('Hello world!!!')
+})
+
+app.post('/note', (req, res) => {
+  const { text, phoneNumber } = req.body
+  sendSMS(text, phoneNumber)
+  res.status(200).send('Sending note')
+})
 
 app.listen(process.env.PORT || 8080, () => {
-  console.log("Server is running on PORT:", process.env.PORT || PORT);
-});
+  console.log('Server is running on PORT:', process.env.PORT || PORT)
+})
