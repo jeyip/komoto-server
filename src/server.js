@@ -5,19 +5,23 @@ if (process.env.NODE_ENV !== 'production') {
 import express from 'express'
 // import sendSMS from './utils/send_sms'
 import cors from 'cors'
+import morgan from 'morgan'
+import { json, urlencoded } from 'body-parser'
 import { connect } from './utils/db'
 import { noteRouter } from './resources/note/note.router'
+import { signin, signup } from './utils/auth'
 
 var app = express()
 
 app.use(cors())
+app.use(json())
+app.use(urlencoded({ extended: true }))
+app.use(morgan('dev'))
+
+app.post('/api/signin', signin)
+app.post('/api/signup', signup)
 
 app.use('/api/note', noteRouter)
-app.post('/note', (req, res) => {
-  const { text, phoneNumber } = req.body
-  // sendSMS(text, phoneNumber)
-  res.status(200).send('Sending note')
-})
 
 export const start = async () => {
   try {
