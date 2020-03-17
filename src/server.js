@@ -9,7 +9,8 @@ import morgan from 'morgan'
 import { json, urlencoded } from 'body-parser'
 import { connect } from './utils/db'
 import { noteRouter } from './resources/note/note.router'
-import { signin, signup } from './utils/auth'
+import { userRouter } from './resources/user/user.router'
+import { signin, signup, protect } from './utils/auth'
 
 var app = express()
 
@@ -18,10 +19,12 @@ app.use(json())
 app.use(urlencoded({ extended: true }))
 app.use(morgan('dev'))
 
-app.post('/api/signin', signin)
-app.post('/api/signup', signup)
+app.post('/signin', signin)
+app.post('/signup', signup)
 
+app.use('/api', protect)
 app.use('/api/note', noteRouter)
+app.use('/api/user', userRouter)
 
 export const start = async () => {
   try {
