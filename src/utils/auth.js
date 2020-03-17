@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 
 const createNewToken = id => {
   return new Promise((resolve, reject) => {
-    jwt.sign({ id }, process.env.JWT_SECRET, function(err, token) {
+    jwt.sign(id, process.env.JWT_SECRET, function(err, token) {
       if (err) {
         return reject(err)
       }
@@ -67,5 +67,26 @@ export const signup = async (req, res) => {
   res.json({ token })
 }
 
-// TODO: Create protect middleware
-export const protect = async (req, res) => {}
+export const protect = async (req, res, next) => {
+  if (!Boolean(req.headers.authorization)) {
+    return res.status(403).end()
+  }
+
+  const bearerToken = req.headers.authorization
+  const token = bearerToken.split('Bearer ')[1]
+  const decodedToken = await verifyToken(token)
+
+  try {
+    const user = await User.findById(decodedToken.id)
+      .select('-password')
+      .lean()
+      .exec()
+
+    console.log({ user })
+    req.user = user
+    next()
+  } catch (e) {
+    console.error(e)
+    return res.status(401).end()
+  }
+}
