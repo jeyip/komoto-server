@@ -1,4 +1,5 @@
 import { Router } from 'express'
+import { createNote } from './note.controller'
 
 const router = Router()
 
@@ -8,9 +9,7 @@ router
   .get((req, res) => {
     res.send('got notes')
   })
-  .post((req, res) => {
-    res.send('create notes')
-  })
+  .post(createNote)
 
 // /api/note/:id
 router
