@@ -1,14 +1,12 @@
 import { Router } from 'express'
-import { createNote } from './note.controller'
+import { createNote, getNotes } from './note.controller'
 
 const router = Router()
 
 // /api/note
 router
   .route('/')
-  .get((req, res) => {
-    res.send('got notes')
-  })
+  .get(getNotes)
   .post(createNote)
 
 // /api/note/:id

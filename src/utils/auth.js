@@ -13,7 +13,6 @@ const createNewToken = id => {
   })
 }
 
-// TODO: finish verify token
 const verifyToken = token => {
   return new Promise((resolve, reject) => {
     jwt.verify(token, process.env.JWT_SECRET, function(err, decoded) {
@@ -74,9 +73,9 @@ export const protect = async (req, res, next) => {
 
   const bearerToken = req.headers.authorization
   const token = bearerToken.split('Bearer ')[1]
-  const decodedToken = await verifyToken(token)
 
   try {
+    const decodedToken = await verifyToken(token)
     const user = await User.findById(decodedToken.id)
       .select('-password')
       .lean()
