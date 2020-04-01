@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { createNote, getNotes } from './note.controller'
+import { createNote, deleteNote, getNotes, updateNote } from './note.controller'
 
 const router = Router()
 
@@ -12,14 +12,7 @@ router
 // /api/note/:id
 router
   .route('/:id')
-  .get((req, res) => {
-    res.send('got note')
-  })
-  .put((req, res) => {
-    res.send('updated note')
-  })
-  .delete((req, res) => {
-    res.send('deleted note')
-  })
+  .patch(updateNote)
+  .delete(deleteNote)
 
 export const noteRouter = router
