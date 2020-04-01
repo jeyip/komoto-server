@@ -12,7 +12,7 @@ export const getNotes = async (req, res) => {
       return res.status(400).end()
     }
 
-    return res.status(200).json({ notes })
+    return res.json({ notes })
   } catch (e) {
     return res.status(400).end()
   }
@@ -33,7 +33,43 @@ export const createNote = async (req, res) => {
       return res.status(400).end()
     }
 
-    return res.send({ data: note })
+    return res.send({ note })
+  } catch (e) {
+    console.error(e)
+    return res.status(400).end()
+  }
+}
+
+export const updateNote = async (req, res) => {
+  let id
+
+  if (req.params && req.params.id) {
+    id = req.params.id
+  } else {
+    return res.status(400).end()
+  }
+
+  try {
+    const updated = await Note.findByIdAndUpdate(id)
+    return res.json({ id: updated.id })
+  } catch (e) {
+    console.error(e)
+    return res.status(400).end()
+  }
+}
+
+export const deleteNote = async (req, res) => {
+  let id
+
+  if (req.params && req.params.id) {
+    id = req.params.id
+  } else {
+    return res.status(400).end()
+  }
+
+  try {
+    const removed = await Note.findByIdAndDelete(id)
+    return res.json({ id: removed.id })
   } catch (e) {
     console.error(e)
     return res.status(400).end()
