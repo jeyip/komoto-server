@@ -1,12 +1,9 @@
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config()
-}
-
 import express from 'express'
 // import sendSMS from './utils/send_sms'
 import cors from 'cors'
 import morgan from 'morgan'
 import { json, urlencoded } from 'body-parser'
+import { config } from './config'
 import { connect } from './utils/db'
 import { noteRouter } from './resources/note/note.router'
 import { userRouter } from './resources/user/user.router'
@@ -29,8 +26,8 @@ app.use('/api/user', userRouter)
 export const start = async () => {
   try {
     await connect()
-    app.listen(process.env.PORT || 8080, () => {
-      console.log('Server is running on PORT:', process.env.PORT || 8080)
+    app.listen(config.port, () => {
+      console.log('Server is running on PORT:', config.port)
     })
   } catch (e) {
     console.error(e)
