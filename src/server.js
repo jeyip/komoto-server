@@ -11,7 +11,7 @@ import { signin, signup, protect } from './utils/auth'
 
 var app = express()
 
-app.use(cors({ credentials: true, origin: 'http://localhost:3000' }))
+app.use(cors({ credentials: true, origin: config.origin }))
 app.use(json())
 app.use(urlencoded({ extended: true }))
 app.use(morgan('dev'))

@@ -10,17 +10,18 @@ const baseConfig = {
     jwtExp: process.env.JWT_EXPIRATION
   }
 }
-
 const getConfig = env => {
   let config = {}
 
   if (env === 'development') {
     config = {
-      dbUrl: 'mongodb://localhost/komoto'
+      dbUrl: 'mongodb://localhost/komoto',
+      origin: 'http://localhost:3000'
     }
   } else {
     config = {
-      dbUrl: ''
+      dbUrl: `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0-t41bj.mongodb.net/test?retryWrites=true&w=majority`,
+      origin: 'https://komotoapp.netlify.com'
     }
   }
 
