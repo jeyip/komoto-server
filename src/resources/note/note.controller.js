@@ -50,7 +50,7 @@ export const updateNote = async (req, res) => {
   }
 
   try {
-    const updated = await Note.findByIdAndUpdate(id)
+    const updated = await Note.findByIdAndUpdate(id, req.body)
     return res.json({ id: updated.id })
   } catch (e) {
     console.error(e)
