@@ -1,13 +1,14 @@
-import { User } from '../resources/user/user.model'
 import jwt from 'jsonwebtoken'
+import { User } from '../resources/user/user.model'
+import { config } from '../config'
 
 const createNewToken = id => {
   return new Promise((resolve, reject) => {
     jwt.sign(
       { data: { id } },
-      process.env.JWT_SECRET,
+      config.secrets.jwt,
       {
-        expiresIn: '2 days'
+        expiresIn: config.secrets.jwtExp
       },
       function(err, token) {
         if (err) {
@@ -22,7 +23,7 @@ const createNewToken = id => {
 
 const verifyToken = token => {
   return new Promise((resolve, reject) => {
-    jwt.verify(token, process.env.JWT_SECRET, function(err, decoded) {
+    jwt.verify(token, config.secrets.jwt, function(err, decoded) {
       if (err) {
         return reject(err)
       }
