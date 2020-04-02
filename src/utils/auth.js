@@ -3,13 +3,20 @@ import jwt from 'jsonwebtoken'
 
 const createNewToken = id => {
   return new Promise((resolve, reject) => {
-    jwt.sign(id, process.env.JWT_SECRET, function(err, token) {
-      if (err) {
-        return reject(err)
-      }
+    jwt.sign(
+      { data: { id } },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: '2 days'
+      },
+      function(err, token) {
+        if (err) {
+          return reject(err)
+        }
 
-      return resolve(token)
-    })
+        return resolve(token)
+      }
+    )
   })
 }
 
@@ -19,7 +26,6 @@ const verifyToken = token => {
       if (err) {
         return reject(err)
       }
-
       return resolve(decoded)
     })
   })
@@ -43,32 +49,38 @@ export const signin = async (req, res) => {
   if (!match) {
     return res.status(401).end()
   } else {
-    const token = await createNewToken({ id: user.id })
-    return res.json({ token })
+    const token = await createNewToken(user.id)
+    return res.cookie('token', token).end()
   }
 }
 
 export const signup = async (req, res) => {
   const { firstName, lastName, email, password } = req.body
+  let user
 
   if (!email || !password || !firstName || !lastName) {
     return res.status(400).end()
   }
 
   // TODO: Handle email that already exists error
-  const user = await User.create({ firstName, lastName, email, password })
+  try {
+    user = await User.create({ firstName, lastName, email, password })
+  } catch (e) {
+    console.error(e)
+    return res.status(400).end()
+  }
 
   if (!user) {
     return res.status(400).end()
   }
 
-  const token = await createNewToken({ id: user.id })
-  res.json({ token })
+  const token = await createNewToken(user.id)
+  res.cookie('token', token).end()
 }
 
 export const protect = async (req, res, next) => {
   if (!Boolean(req.headers.authorization)) {
-    return res.status(403).end()
+    return res.status(400).end()
   }
 
   const bearerToken = req.headers.authorization
@@ -76,16 +88,16 @@ export const protect = async (req, res, next) => {
 
   try {
     const decodedToken = await verifyToken(token)
-    const user = await User.findById(decodedToken.id)
+    const user = await User.findById(decodedToken.data.id)
       .select('-password')
       .lean()
       .exec()
 
-    console.log({ user })
     req.user = user
     next()
   } catch (e) {
-    console.error(e)
-    return res.status(401).end()
+    return res.status(401).json({
+      error: e.name
+    })
   }
 }
