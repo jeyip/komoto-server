@@ -80,15 +80,12 @@ export const signup = async (req, res) => {
 }
 
 export const protect = async (req, res, next) => {
-  if (!Boolean(req.headers.authorization)) {
-    return res.status(400).end()
+  if (!Boolean(req.cookies.token)) {
+    return res.status(401).end()
   }
 
-  const bearerToken = req.headers.authorization
-  const token = bearerToken.split('Bearer ')[1]
-
   try {
-    const decodedToken = await verifyToken(token)
+    const decodedToken = await verifyToken(req.cookies.token)
     const user = await User.findById(decodedToken.data.id)
       .select('-password')
       .lean()
