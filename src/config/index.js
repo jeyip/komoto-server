@@ -21,7 +21,7 @@ const getConfig = env => {
   } else {
     config = {
       dbUrl: `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0-t41bj.mongodb.net/test?retryWrites=true&w=majority`,
-      origin: 'https://komotoapp.netlify.com'
+      origin: ['https://www.komoto.xyz/', 'https://komotoapp.netlify.com/']
     }
   }
 
