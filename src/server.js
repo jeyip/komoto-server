@@ -6,11 +6,9 @@ import { json, urlencoded } from 'body-parser'
 import { config } from './config'
 import { connect } from './utils/db'
 import { noteRouter } from './resources/note/note.router'
-import { userRouter } from './resources/user/user.router'
 import { signin, signup, protect } from './utils/auth'
 
 var app = express()
-
 app.use(cors({ credentials: true, origin: config.origin }))
 app.use(json())
 app.use(urlencoded({ extended: true }))
@@ -21,7 +19,6 @@ app.post('/signup', signup)
 
 app.use('/api', protect)
 app.use('/api/note', noteRouter)
-app.use('/api/user', userRouter)
 
 export const start = async () => {
   try {
