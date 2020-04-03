@@ -21,7 +21,17 @@ const getConfig = env => {
   } else {
     config = {
       dbUrl: `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0-t41bj.mongodb.net/test?retryWrites=true&w=majority`,
-      origin: ['https://www.komoto.xyz/', 'https://komotoapp.netlify.com/']
+      origin: (origin, callback) => {
+        const whitelist = [
+          'https://komoto.xyz',
+          'https://komotoapp.netlify.com'
+        ]
+        if (whitelist.indexOf(origin) !== -1) {
+          callback(null, true)
+        } else {
+          callback(new Error('Not allowed by CORS'))
+        }
+      }
     }
   }
 
